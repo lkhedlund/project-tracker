@@ -7,10 +7,15 @@ class Project(models.Model):
     total_count = models.IntegerField()
     start_date = models.DateField(default=timezone.now)
     end_date = models.DateField(default=timezone.now)
-    total_count = models.IntegerField()
     user_id = models.ForeignKey('auth.User')
+
+    def __str__(self):
+        return self.title
 
 class Count(models.Model):
     count_update = models.IntegerField()
     created_date = models.DateField(default=timezone.now)
     project_id = models.ForeignKey(Project)
+
+    def __str__(self):
+        return self.count_update
