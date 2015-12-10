@@ -1,0 +1,20 @@
+{% load staticfiles %}
+
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Project Tracker</title>
+</head>
+<body>
+  {% if user.is_authenticated %}
+    <li><a href="#">Add New Project</a></li>
+    <li><a href="/accounts/logout/">Sign Out</a></li>
+  {% else %}
+    <li><a href="/accounts/login/">Sign In</a></li>
+  {% endif %}
+  <div>
+    {% block content %}
+    {% endblock %}
+  </div>
+</body>
+</html>

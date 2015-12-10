@@ -1,0 +1,10 @@
+{% extends 'posting_wall/base.html' %}
+
+{% block content %}
+  <h1>Create a Project</h1>
+  <form role="form" method="POST">
+    {% csrf_token %}
+    {% include "partials/form.html"%}
+    <button type="submit">Save</button>
+  </form>
+{% endblock %}

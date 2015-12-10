@@ -1,0 +1,25 @@
+{% extends 'tracker/base.html' %}
+
+{% block content %}
+  <h2>{{ project.title }}</h2>
+  <p>
+    {{ project.description }}
+  </p>
+  <table>
+    <tr>
+      <th>Goal Total</th>
+      <th>Start Date</th>
+      <th>End Date</th>
+    </tr>
+    <tr>
+      <td>{{ project.total_count }}</td>
+      <td>{{ project.start_date }}</td>
+      <td>{{ project.end_date }}</td>
+    </tr>
+  </table>
+  <hr>
+  <h3>Project tracking</h3>
+  <div>
+
+  </div>
+{% endblock %}
