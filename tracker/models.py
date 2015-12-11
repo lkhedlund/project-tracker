@@ -15,7 +15,7 @@ class Project(models.Model):
 class Count(models.Model):
     count_update = models.IntegerField()
     created_date = models.DateField(default=timezone.now)
-    project_id = models.ForeignKey(Project)
+    project = models.ForeignKey('tracker.Project', related_name='counts')
 
     def __str__(self):
         return self.count_update

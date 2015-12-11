@@ -20,6 +20,11 @@
   <hr>
   <h3>Project tracking</h3>
   <div>
-
+    <h1>Total count: {{ count_sum.count_update__sum }}</h1>
+    <form method="post" action="{% url 'project_detail' pk=project.pk %}">
+      {% csrf_token %}
+      {% include "partials/form.html"%}
+      <button type="submit">Update</button>
+    </form>
   </div>
 {% endblock %}
