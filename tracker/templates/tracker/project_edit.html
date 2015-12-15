@@ -2,7 +2,7 @@
 
 {% block content %}
   <h1>Create a Project</h1>
-  <form role="form" method="POST">
+  <form action="/project_new/" role="form" method="POST" id="project_form">
     {% csrf_token %}
     {% include "partials/form.html"%}
     <button type="submit">Save</button>
