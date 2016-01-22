@@ -7,8 +7,6 @@ $('#project_form').on('submit', function(event) {
 });
 
 function project_new() {
-  var
-  console.log("new project is working!");
   $.ajax({
     url: "project_new/",
     type: "POST",
