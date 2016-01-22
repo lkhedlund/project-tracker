@@ -4,8 +4,8 @@
 <html>
 <head>
   <title>Project Tracker</title>
-  <script src="{% static 'javascripts/jquery-2.1.4.min.js' %}"></script>
-  <script src="{% static 'javascripts/main.js' %}"></script>
+  <link ref="{% static 'css/material.min.css' %}">
+  <link ref="{% static 'css/main.css' %}">
 </head>
 <body>
   {% if user.is_authenticated %}
@@ -18,6 +18,8 @@
     {% block content %}
     {% endblock %}
   </div>
-  <script src="{% static 'javascripts/main.js' %}"></script>
+  <script src="{% static 'js/jquery-2.1.4.min.js' %}"></script>
+  <script src="{% static 'js/material.min.js' %}"></script>
+  <script src="{% static 'js/main.js' %}"></script>
 </body>
 </html>

@@ -1,3 +1,5 @@
+
+// Form submission for new projects
 $('#project_form').on('submit', function(event) {
   event.preventDefault();
   console.log('form submitted!');
@@ -5,12 +7,19 @@ $('#project_form').on('submit', function(event) {
 });
 
 function project_new() {
+  var
   console.log("new project is working!");
-  console.log($('#project_form').val());
+  $.ajax({
+    url: "project_new/",
+    type: "POST",
+    data: { project: },
+  })
 }
 
-// CSRF Token Projection from Real Python
+// AJAX for new Projects
 
+
+// CSRF Token Projection from Real Python
 // This function gets cookie with a given name
 function getCookie(name) {
     var cookieValue = null;
