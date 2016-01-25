@@ -1,10 +1,16 @@
 {% extends 'tracker/base.html' %}
 
 {% block content %}
-  <h1>Create a Project</h1>
-  <form action="/project_new/" role="form" method="POST" id="project_form">
-    {% csrf_token %}
-    {% include "partials/form.html"%}
-    <button type="submit">Save</button>
-  </form>
+<section class="section--center mdl-grid mdl-grid--no-spacing mdl-shadow--2dp">
+  <div class="mdl-card mdl-cell mdl-cell--12-col">
+    <div class="mdl-card__supporting-text">
+      <h1>Create a Project</h1>
+      <form action="/project_new/" role="form" method="POST" id="project_form">
+        {% csrf_token %}
+        {% include "partials/form.html"%}
+        <button type="submit">Save</button>
+      </form>
+    </div>
+  </div>
+</section>
 {% endblock %}
