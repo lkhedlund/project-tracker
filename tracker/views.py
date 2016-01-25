@@ -1,6 +1,7 @@
 from django.shortcuts import render, get_object_or_404, redirect
 from django.contrib.auth.decorators import login_required
-from django.http import HttpResponseRedirect
+from django.core.urlresolvers import reverse
+from django.http import HttpResponseRedirect, HttpResponse
 from django.db.models import Sum
 from .models import Project, Count
 from .forms import ProjectForm, CountForm
@@ -8,10 +9,13 @@ from .forms import ProjectForm, CountForm
 @login_required
 def project_list(request):
     projects = Project.objects.all()
-    return render(request, 'tracker/project_list.html', { 'projects': projects })
+    return render(request, 'tracker/project_list.html', {
+        'projects': projects
+    })
 
 @login_required
 def project_detail(request, pk):
+    projects = Project.objects.all()
     project = get_object_or_404(Project, pk=pk)
     counts = project.counts.all()
     count_sum = project.counts.aggregate(Sum('count_update'))
@@ -21,10 +25,16 @@ def project_detail(request, pk):
             count = form.save(commit=False)
             count.project = project
             count.save()
-            # return HttpResponseRedirect('views.project_detail')
+            return HttpResponseRedirect(reverse('tracker.views.project_detail', args=(project.id,)))
     else:
         form = CountForm()
-    return render(request, 'tracker/project_detail.html', { 'project': project, 'counts': counts, 'count_sum': count_sum, 'form': form })
+    return render(request, 'tracker/project_detail.html', {
+        'projects': projects,
+        'project': project,
+        'counts': counts,
+        'count_sum': count_sum,
+        'form': form
+    })
 
 @login_required
 def project_new(request):
@@ -37,7 +47,9 @@ def project_new(request):
             return redirect('project_detail', pk=project.pk)
     else:
         form = ProjectForm()
-    return render(request, 'tracker/project_edit.html', { 'form': form })
+    return render(request, 'tracker/project_edit.html', {
+    'form': form
+    })
 
 @login_required
 def project_edit(request, pk):
