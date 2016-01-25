@@ -11,7 +11,7 @@ def project_list(request):
     projects = Project.objects.all()
     return render(request, 'tracker/project_list.html', {
         'projects': projects
-    })
+        })
 
 @login_required
 def project_detail(request, pk):
@@ -34,7 +34,7 @@ def project_detail(request, pk):
         'counts': counts,
         'count_sum': count_sum,
         'form': form
-    })
+        })
 
 @login_required
 def project_new(request):
@@ -48,8 +48,8 @@ def project_new(request):
     else:
         form = ProjectForm()
     return render(request, 'tracker/project_edit.html', {
-    'form': form
-    })
+        'form': form
+        })
 
 @login_required
 def project_edit(request, pk):
@@ -63,4 +63,12 @@ def project_edit(request, pk):
             return redirect( 'project_detail', pk=project.pk )
     else:
         form = PostForm( instance=project )
-    return render(request, 'posting_wall/project_edit.html', { 'form': form })
+    return render(request, 'tracker/project_edit.html', {
+        'form': form
+        })
+
+@login_required
+def project_delete(request, pk):
+    project = get_object_or_404(Project, pk=pk)
+    project.delete()
+    return redirect('project_list')

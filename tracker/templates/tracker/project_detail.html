@@ -20,16 +20,20 @@
           <td>{{ project.end_date }}</td>
         </tr>
       </table>
-      <hr>
-      <h3>Project tracking</h3>
-      <div>
-        <h1>Total count: {{ count_sum.count_update__sum }}</h1>
+    </div>
+      <div class="mdl-card__supporting-text">
+        <h3>Project tracking</h3>
+        <p>
+          Total count: {{ count_sum.count_update__sum }}
+        </p>
         <form method="post" action="{% url 'project_detail' pk=project.pk %}">
           {% csrf_token %}
           {% include "partials/form.html"%}
           <button class="mdl-button mdl-js-button mdl-button--raised mdl-button--accent" type="submit">Update</button>
         </form>
       </div>
+    <div class="mdl-card__actions">
+      <a class="mdl-button" style="float: right;" href="{% url 'project_delete' pk=project.pk %}">Delete</a>
     </div>
   </div>
 </section>

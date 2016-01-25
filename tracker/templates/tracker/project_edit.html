@@ -5,7 +5,7 @@
   <div class="mdl-card mdl-cell mdl-cell--12-col">
     <div class="mdl-card__supporting-text">
       <h1>Create a Project</h1>
-      <form action="/project_new/" role="form" method="POST" id="project_form">
+      <form role="form" method="POST" id="project_form">
         {% csrf_token %}
         {% include "partials/form.html"%}
         <button class="mdl-button mdl-js-button mdl-button--raised mdl-button--accent" type="submit">Save</button>
