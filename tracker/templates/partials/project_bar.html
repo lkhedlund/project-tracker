@@ -1,7 +1,7 @@
 <div class="mdl-layout__drawer">
-  <span class="mdl-layout-title">Project Tracker</span>
+  <span class="mdl-layout-title">Projects</span>
   <nav class="mdl-navigation">
-    {% for project in projects %}
+    {% for project in projects|slice:":10" %}
       <a class="mdl-navigation__link" href="{% url 'project_detail' pk=project.pk %}">{{ project.title }}</a>
     {% endfor %}
   </nav>

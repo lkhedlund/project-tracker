@@ -2,12 +2,14 @@
   {% if field.is_hidden %}
     {{ field }}
   {% else %}
-  <div class="form-group">
-    {{ field.label_tag }}
+  <div class="mdl-textfield mdl-js-textfield">
+    <label for="{{ field.name }}" class="mdl-textfield__label">
+      {{ field.label }}
+    </label>
     {{ field }}
   </div>
   {% if field.errors %}
-    <div class="alert" role="alert">{{ field.errors }}</div>
+    <div class="mdl-textfield__error" >{{ field.errors }}</div>
   {% endif %}
   {% endif %}
   {% if field.help_text %}

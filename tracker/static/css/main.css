@@ -166,3 +166,7 @@ section.section--center .section__text:not(:last-child) {
 .mdl-menu__container {
   z-index: 99;
 }
+
+.mdl-textfield {
+  display: block;
+}
