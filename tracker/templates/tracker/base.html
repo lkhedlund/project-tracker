@@ -21,6 +21,7 @@
         <div class="mdl-layout__header-row">
           <div class="mdl-layout-spacer"></div>
           {% if user.is_authenticated %}
+          <a class="mdl-navigation__link" href="{% url 'project_list' %}"><i class="material-icons">home</i> Home</a>
            <a class="mdl-navigation__link" href="{% url 'project_new' %}"><i class="material-icons">add_circle</i> Add Project</a>
            <a class="mdl-navigation__link" href="/accounts/logout/"><i class="material-icons">cancel</i> Sign out</a>
           {% endif %}
