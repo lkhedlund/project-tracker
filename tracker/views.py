@@ -62,7 +62,7 @@ def project_edit(request, pk):
             project.save()
             return redirect( 'project_detail', pk=project.pk )
     else:
-        form = PostForm( instance=project )
+        form = ProjectForm( instance=project )
     return render(request, 'tracker/project_edit.html', {
         'form': form
         })
