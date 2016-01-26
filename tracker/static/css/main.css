@@ -1,9 +1,3 @@
-#login {
-  background: url('../images/login_screen.jpg') no-repeat;
-  background-size: cover;
-}
-
-/* MDL Styles */
 html, body {
   font-family: 'Roboto', 'Helvetica', sans-serif;
   margin: 0;
@@ -166,4 +160,14 @@ section.section--center .section__text:not(:last-child) {
 
 .mdl-textfield {
   display: block;
+}
+
+#login {
+  background: url('../images/login_screen.jpg') no-repeat;
+  background-size: cover;
+}
+
+#date_progress {
+  height: 5px;
+  width: 100%;
 }
