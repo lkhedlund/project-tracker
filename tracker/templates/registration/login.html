@@ -6,11 +6,20 @@
     <div class="alert" role="alert">Your username and password did not match. Please try again.</div>
   {% endif %}
 
-  <form method="post" action="/accounts/login/">
-    {% csrf_token %}
-    {% include "partials/form.html"%}
-    <input type="submit" value="login" />
+  <div class="mdl-card mdl-shadow--2dp">
+    <div class="mdl-card__title mdl-card--expand">
+      <h2 class="mdl-card__title-text">Welcome back!</h2>
+    </div>
+    <div class="mdl-card__supporting-text">
+      <form method="post" action="/accounts/login/">
+        {% csrf_token %}
+        {% include "partials/form.html"%}
+    </div>
+    <div class="mdl-card__actions mdl-card--border">
+      <input class="mdl-button mdl-button--colored mdl-js-button mdl-js-ripple-effect" type="submit" value="login"></input>
+      </form>
+    </div>
+  </div>
     <!-- <input type="hidden" name="next" value="{{ next }}" /> -->
-  </form>
 
 {% endblock %}
