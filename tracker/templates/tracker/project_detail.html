@@ -24,6 +24,9 @@
       <div class="mdl-card__supporting-text">
         <h3>Project tracking</h3>
         <p>
+          Words per day (to reach goal on time): {{ words_per_day }}
+        </p>
+        <p>
           Total count: {{ count_sum.count_update__sum }}
         </p>
         <form method="post" action="{% url 'project_detail' pk=project.pk %}">
