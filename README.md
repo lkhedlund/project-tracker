@@ -8,13 +8,13 @@ This lightweight web app (written in Django) allows you to set any goal that req
 - User can earn achievements for meeting targets
 - User can track his/her progress with the following metrics
 
-Project tracking is broken down into the following metrics:
-- Average count per daily
+### Tracking Metrics
+Completed metrics are struck through.
+- Average count per day
 - Today's count
-- Target count
-- Target Average per day
-- Total count
+- ~~Target count~~
+- ~~Target Average per day~~
+- ~~Total count~~
 - Count remaining to achieve goal
-- Current Day
-- Days remaining
+- ~~Days remaining~~
 - Day goal achieved on
