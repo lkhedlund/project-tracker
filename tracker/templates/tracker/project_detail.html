@@ -4,17 +4,17 @@
 <section class="section--center mdl-grid mdl-grid--no-spacing mdl-shadow--2dp">
   <div class="mdl-card mdl-cell mdl-cell--12-col">
     <div class="mdl-card__supporting-text">
+      <p>
+        <span>{{ project.start_date }}</span>
+        <span style="float:right;">{{ project.end_date }}</span>
+        <div id="date_progress" class="mdl-progress mdl-js-progress"></div>
+      </p>
       <h2>{{ project.title }}</h2>
       <p>
         {{ project.description }}
       </p>
       <p>
         <strong>Goal total:</strong> {{ project.total_count }}
-      </p>
-      <p>
-        <span>{{ project.start_date }}</span>
-        <span style="float:right;">{{ project.end_date }}</span>
-        <div id="date_progress" class="mdl-progress mdl-js-progress"></div>
       </p>
     </div>
       <div class="mdl-card__supporting-text">
