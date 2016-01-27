@@ -25,27 +25,14 @@ class ProjectDetail(View):
     template_name = 'tracker/project_detail.html'
 
     def get(self, request, pk):
+        form = self.form_class
         project = get_object_or_404(Project, pk=pk)
         counts = project.counts.all()
         count_sum = project.counts.aggregate(Sum('count_update'))
-        form = self.form_class
+        sum_value = self.__sum_value(count_sum)
+        date_progress = self.__date_progress(project)
+        words_per_day = self.__words_per_day(project, sum_value)
         # Variables for date_progress and words_per_day
-        sum_value = next(iter(count_sum.values()))
-        if sum_value == None:
-            sum_value = 0
-        remaining_words = project.total_count - sum_value
-        remaining_days = (project.end_date - datetime.date.today()).days
-        time_from_start = (datetime.date.today() - project.start_date).days
-        total_days = (project.end_date - project.start_date).days
-        try:
-            words_per_day = int(remaining_words / remaining_days)
-        except ZeroDivisionError:
-            words_per_day = int(remaining_words)
-        try:
-            date_progress = (time_from_start / total_days) * 100
-        except ZeroDivisionError:
-            # If the remaining days is 0, then we want the bar to be full
-            date_progress = 100
         return render(request, self.template_name, {
             'project': project,
             'counts': counts,
@@ -57,6 +44,12 @@ class ProjectDetail(View):
 
     def post(self, request, pk):
         form = self.form_class(request.POST)
+        project = get_object_or_404(Project, pk=pk)
+        counts = project.counts.all()
+        count_sum = project.counts.aggregate(Sum('count_update'))
+        sum_value = self.__sum_value(count_sum)
+        date_progress = self.__date_progress(project)
+        words_per_day = self.__words_per_day(project, sum_value)
         if form.is_valid():
             count = form.save(commit=False)
             count.project = project
@@ -70,6 +63,28 @@ class ProjectDetail(View):
             'words_per_day': words_per_day,
             'form': form
             })
+
+    def __words_per_day(self, project, sum_value):
+        remaining_words = project.total_count - sum_value
+        remaining_days = (project.end_date - datetime.date.today()).days
+        try:
+            return int(remaining_words / remaining_days)
+        except ZeroDivisionError:
+            return int(remaining_words)
+
+    def __date_progress(self, project):
+        time_from_start = (datetime.date.today() - project.start_date).days
+        total_days = (project.end_date - project.start_date).days
+        try:
+            return (time_from_start / total_days) * 100
+        except ZeroDivisionError:
+            # If the remaining days is 0, then we want the bar to be full
+            return 100
+
+    def __sum_value(self, count_sum):
+        # Return the value of count_sum or 0 if None.
+        return next(iter(count_sum.values())) or 0
+
 
 @login_required
 def project_new(request):
