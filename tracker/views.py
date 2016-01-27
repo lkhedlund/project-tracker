@@ -23,10 +23,8 @@ class ProjectList(View):
 class ProjectDetail(View):
     form_class = CountForm
     template_name = 'tracker/project_detail.html'
-    project = get_object_or_404(Project, pk=pk)
 
     def get(self, request, pk):
-        projects = Project.objects.all()
         project = get_object_or_404(Project, pk=pk)
         counts = project.counts.all()
         count_sum = project.counts.aggregate(Sum('count_update'))
@@ -49,7 +47,6 @@ class ProjectDetail(View):
             # If the remaining days is 0, then we want the bar to be full
             date_progress = 100
         return render(request, self.template_name, {
-            'projects': projects,
             'project': project,
             'counts': counts,
             'count_sum': count_sum,
@@ -66,7 +63,6 @@ class ProjectDetail(View):
             count.save()
             return HttpResponseRedirect(reverse('project_detail', args=(project.id,)))
         return render(request, self.template_name, {
-            'projects': projects,
             'project': project,
             'counts': counts,
             'count_sum': count_sum,
