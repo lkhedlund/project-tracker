@@ -85,6 +85,14 @@ class ProjectDetail(View):
         # Return the value of count_sum or 0 if None.
         return next(iter(count_sum.values())) or 0
 
+    def __average_count_per_day(self, counts):
+        # Return the average count per day.
+        # NOTE: Feature not yet implemented
+        """
+        Logic: Need to get a count total for each day and divide by the total number of days since the start. So, for example, if a record has 1000 words on the 1st, 2000 on the 2nd, and nothing on the 3rd, it should be (1000 + 2000 + 0) / 3.
+        """
+        for count in counts:
+            count.created_date
 
 @method_decorator(login_required, name='dispatch')
 class ProjectNew(View):
