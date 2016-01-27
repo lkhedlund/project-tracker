@@ -104,22 +104,33 @@ class ProjectNew(View):
             project.user_id = request.user
             project.save()
             return redirect('project_detail', pk=project.pk)
+        return render(request, self.template_name, {
+            'form': form
+            })
 
-@login_required
-def project_edit(request, pk):
-    project = get_object_or_404(Project, pk=pk)
-    if request.method == "POST":
-        form = ProjectForm( request.POST, instance=project )
+@method_decorator(login_required, name='dispatch')
+class ProjectEdit(View):
+    form_class = ProjectForm
+    template_name = 'tracker/project_edit.html'
+
+    def get(self, request, pk):
+        project = get_object_or_404(Project, pk=pk)
+        form = self.form_class( instance=project )
+        return render(request, self.template_name, {
+            'form': form
+            })
+
+    def post(self, request, pk):
+        project = get_object_or_404(Project, pk=pk)
+        form = self.form_class( request.POST, instance=project )
         if form.is_valid():
             project = form.save(commit=False)
             project.user_id = request.user
             project.save()
             return redirect( 'project_detail', pk=project.pk )
-    else:
-        form = ProjectForm( instance=project )
-    return render(request, 'tracker/project_edit.html', {
-        'form': form
-        })
+        return render(request, 'tracker/project_edit.html', {
+            'form': form
+            })
 
 @login_required
 def project_delete(request, pk):
