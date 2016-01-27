@@ -2,21 +2,25 @@ from django.shortcuts import render, get_object_or_404, redirect
 from django.contrib.auth.decorators import login_required
 from django.core.urlresolvers import reverse
 from django.http import HttpResponseRedirect, HttpResponse
+from django.views.generic import View
+from django.utils.decorators import method_decorator
 from django.db.models import Sum
 import datetime
 from .models import Project, Count
 from .forms import ProjectForm, CountForm
 
-@login_required
-def project_list(request):
-    projects = Project.objects.all()
-    return render(request, 'tracker/project_list.html', {
-        'projects': projects
-        })
+@method_decorator(login_required, name='dispatch')
+class ProjectView(View):
+
+    def get(self, request):
+        projects = Project.objects.all()
+        return render(request, 'tracker/project_list.html', {
+            'projects': projects
+            })
 
 @login_required
 def project_detail(request, pk):
-    # FIXME: Need to refactor into Class-based views 
+    # FIXME: Need to refactor into Class-based views
     projects = Project.objects.all()
     project = get_object_or_404(Project, pk=pk)
     counts = project.counts.all()
