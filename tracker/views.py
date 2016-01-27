@@ -86,20 +86,24 @@ class ProjectDetail(View):
         return next(iter(count_sum.values())) or 0
 
 
-@login_required
-def project_new(request):
-    if request.method == "POST":
-        form = ProjectForm(request.POST)
+@method_decorator(login_required, name='dispatch')
+class ProjectNew(View):
+    form_class = ProjectForm
+    template_name = 'tracker/project_edit.html'
+
+    def get(self, request):
+        form = self.form_class
+        return render(request, self.template_name, {
+            'form': form
+            })
+
+    def post(self, request):
+        form = self.form_class(request.POST)
         if form.is_valid():
             project = form.save(commit=False)
             project.user_id = request.user
             project.save()
             return redirect('project_detail', pk=project.pk)
-    else:
-        form = ProjectForm()
-    return render(request, 'tracker/project_edit.html', {
-        'form': form
-        })
 
 @login_required
 def project_edit(request, pk):
