@@ -1,7 +1,7 @@
 <div class="mdl-layout__drawer">
   <span class="mdl-layout-title">Projects</span>
   <nav class="mdl-navigation">
-    {% for project in projects|slice:":10" %}
+    {% for project in recent_projects %}
       <a class="mdl-navigation__link" href="{% url 'project_detail' pk=project.pk %}">{{ project.title }}</a>
     {% endfor %}
   </nav>
