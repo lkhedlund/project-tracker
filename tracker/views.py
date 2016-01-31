@@ -11,12 +11,12 @@ from .forms import ProjectForm, CountForm
 
 @method_decorator(login_required, name='dispatch')
 class ProjectList(View):
-    projects = Project.objects.all()
     template_name = 'tracker/project_list.html'
 
     def get(self, request):
+        projects = Project.objects.all()
         return render(request, self.template_name, {
-            'projects': self.projects
+            'projects': projects
             })
 
 @method_decorator(login_required, name='dispatch')
@@ -92,7 +92,7 @@ class ProjectDetail(View):
         # is greater. This is meant to account for someone updating their count
         # from a total count (like word count from MS Word).
         print(data, count_sum)
-        if data > count_sum:
+        if data > -1:
             return data - count_sum
         else:
             return data
