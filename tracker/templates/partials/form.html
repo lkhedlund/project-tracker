@@ -8,10 +8,11 @@
     </label>
     {{ field }}
   </div>
-  {% if field.errors %}
-    <div class="mdl-textfield__error" >{{ field.errors }}</div>
+    {% if field.errors %}
+      <div class="mdl-textfield__error" >{{ field.errors }}</div>
+    {% endif %}
   {% endif %}
-  {% endif %}
+  
   {% if field.help_text %}
     <p class="help-block">{{ field.help_text|safe }}</p>
   {% endif %}
