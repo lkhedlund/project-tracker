@@ -1,0 +1,22 @@
+{% extends "tracker/base.html" %}
+
+{% block content %}
+<section class="section--center mdl-grid mdl-grid--no-spacing mdl-color--white mdl-shadow--2dp">
+  <ul class="archive-list mdl-list">
+    {% for project in projects %}
+    <li class="mdl-list__item mdl-list__item--three-line">
+      <span class="mdl-list__item-primary-content">
+        <i class="material-icons mdl-list__item-icon">description</i>
+        <span class=mdl-list__item-title>{{ project.title }}</span>
+        <span class="mdl-list__item-text-body">
+          {{ project.description|truncatechars:120 }}
+        </span>
+      </span>
+      <span class="mdl-list__item-secondary-content">
+        <a class="mdl-list__item-secondary-action" href="{% url 'project_detail' pk=project.pk %}"><i class="material-icons">open_in_new</i></a>
+      </span>
+    </li>
+    {% endfor %}
+  </ul>
+</section>
+{% endblock %}
