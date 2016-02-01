@@ -1,86 +1,80 @@
 {% extends "tracker/base.html" %}
 
 {% block content %}
+<section class="section--center mdl-grid mdl-grid--no-spacing mdl-shadow--2dp">
+    <script>
+      var width = 960,
+      height = 136,
+      cellSize = 17; // cell size
 
-  {% for project in projects %}
-  <section class="section--center mdl-grid mdl-grid--no-spacing mdl-shadow--2dp">
-    <div class="mdl-card mdl-cell mdl-cell--12-col">
-  <script>
-    var width = 960,
-    height = 136,
-    cellSize = 17; // cell size
+      var percent = d3.format(".1%"),
+        format = d3.time.format("%Y-%m-%d");
 
-    var percent = d3.format(".1%"),
-      format = d3.time.format("%Y-%m-%d");
+      var start_year = {{ first_project.start_date|date:"Y" }},
+        end_year = {{ last_project.start_date|date:"Y" }}
 
-    var first = {{ first_project.start_date|date:"Y" }},
-      last = {{ last_project.start_date|date:"Y" }}
+      var color = d3.scale.quantize()
+        .domain([-.05, .05])
+        .range(d3.range(11).map(function(d) { return "q" + d + "-11"; }));
 
-    var color = d3.scale.quantize()
-      .domain([-.05, .05])
-      .range(d3.range(11).map(function(d) { return "q" + d + "-11"; }));
+      var svg = d3.select(".section--center").selectAll("svg")
+        .data(d3.range(start_year, end_year))
+      .enter().append("svg")
+        .attr("width", width)
+        .attr("height", height)
+        .attr("class", "RdYlGn")
+      .append("g")
+        .attr("transform", "translate(" + ((width - cellSize * 53) / 2) + "," + (height - cellSize * 7 - 1) + ")");
 
-    var svg = d3.select("body").selectAll("svg")
-      .data(d3.range(first, last))
-    .enter().append("svg")
-      .attr("width", width)
-      .attr("height", height)
-      .attr("class", "RdYlGn")
-    .append("g")
-      .attr("transform", "translate(" + ((width - cellSize * 53) / 2) + "," + (height - cellSize * 7 - 1) + ")");
+      svg.append("text")
+        .attr("transform", "translate(-6," + cellSize * 3.5 + ")rotate(-90)")
+        .style("text-anchor", "middle")
+        .text(function(d) { return d; });
 
-    svg.append("text")
-      .attr("transform", "translate(-6," + cellSize * 3.5 + ")rotate(-90)")
-      .style("text-anchor", "middle")
-      .text(function(d) { return d; });
+      var rect = svg.selectAll(".day")
+        .data(function(d) { return d3.time.days(new Date(d, 0, 1), new Date(d + 1, 0, 1)); })
+      .enter().append("rect")
+        .attr("class", "day")
+        .attr("width", cellSize)
+        .attr("height", cellSize)
+        .attr("x", function(d) { return d3.time.weekOfYear(d) * cellSize; })
+        .attr("y", function(d) { return d.getDay() * cellSize; })
+        .datum(format);
 
-    var rect = svg.selectAll(".day")
-      .data(function(d) { return d3.time.days(new Date(d, 0, 1), new Date(d + 1, 0, 1)); })
-    .enter().append("rect")
-      .attr("class", "day")
-      .attr("width", cellSize)
-      .attr("height", cellSize)
-      .attr("x", function(d) { return d3.time.weekOfYear(d) * cellSize; })
-      .attr("y", function(d) { return d.getDay() * cellSize; })
-      .datum(format);
+      rect.append("title")
+        .text(function(d) { return d; });
 
-    rect.append("title")
-      .text(function(d) { return d; });
+      svg.selectAll(".month")
+        .data(function(d) { return d3.time.months(new Date(d, 0, 1), new Date(d + 1, 0, 1)); })
+      .enter().append("path")
+        .attr("class", "month")
+        .attr("d", monthPath);
 
-    svg.selectAll(".month")
-      .data(function(d) { return d3.time.months(new Date(d, 0, 1), new Date(d + 1, 0, 1)); })
-    .enter().append("path")
-      .attr("class", "month")
-      .attr("d", monthPath);
+      {% for project in projects %}
+        displayDay("{{ project.start_date|date:'Y-m-d' }}");
+      {% endfor %}
 
-    // NOTE: Need to shift CSV data to django data
-    d3.csv("dji.csv", function(error, csv) {
-    if (error) throw error;
+      function displayDay(full_date) {
+        rect.select("title").text( function(d) {
+          console.log(d === full_date);
+          if (d === full_date) {
+            rect.attr("class", "day " + color(11));
+          }
+        });
+      }
 
-    var data = d3.nest()
-      .key(function(d) { return d.Date; })
-      .rollup(function(d) { return (d[0].Close - d[0].Open) / d[0].Open; })
-      .map(csv);
+      function monthPath(t0) {
+      var t1 = new Date(t0.getFullYear(), t0.getMonth() + 1, 0),
+          d0 = t0.getDay(), w0 = d3.time.weekOfYear(t0),
+          d1 = t1.getDay(), w1 = d3.time.weekOfYear(t1);
+      return "M" + (w0 + 1) * cellSize + "," + d0 * cellSize
+          + "H" + w0 * cellSize + "V" + 7 * cellSize
+          + "H" + w1 * cellSize + "V" + (d1 + 1) * cellSize
+          + "H" + (w1 + 1) * cellSize + "V" + 0
+          + "H" + (w0 + 1) * cellSize + "Z";
+      }
 
-    rect.filter(function(d) { return d in data; })
-        .attr("class", function(d) { return "day " + color(data[d]); })
-      .select("title")
-        .text(function(d) { return d + ": " + percent(data[d]); });
-    });
-
-    function monthPath(t0) {
-    var t1 = new Date(t0.getFullYear(), t0.getMonth() + 1, 0),
-        d0 = t0.getDay(), w0 = d3.time.weekOfYear(t0),
-        d1 = t1.getDay(), w1 = d3.time.weekOfYear(t1);
-    return "M" + (w0 + 1) * cellSize + "," + d0 * cellSize
-        + "H" + w0 * cellSize + "V" + 7 * cellSize
-        + "H" + w1 * cellSize + "V" + (d1 + 1) * cellSize
-        + "H" + (w1 + 1) * cellSize + "V" + 0
-        + "H" + (w0 + 1) * cellSize + "Z";
-    }
-
-    d3.select(self.frameElement).style("height", "2910px");
-  </script>
-</div>
+      d3.select(self.frameElement).style("height", "2910px");
+    </script>
 </section>
 {% endblock %}
