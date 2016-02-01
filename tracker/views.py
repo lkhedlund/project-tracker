@@ -10,11 +10,25 @@ from .models import Project, Count
 from .forms import ProjectForm, CountForm
 
 @method_decorator(login_required, name='dispatch')
+class ArchiveList(View):
+    template_name ="tracker/archive_list.html"
+
+    def get(self, request):
+        projects = Project.objects.all().order_by('start_date')
+        first_project = projects.first()
+        last_project = projects.last()
+        return render(request, self.template_name, {
+            'projects': projects,
+            'first_project': first_project,
+            'last_project': last_project,
+            })
+
+@method_decorator(login_required, name='dispatch')
 class ProjectList(View):
     template_name = 'tracker/project_list.html'
 
     def get(self, request):
-        projects = Project.objects.all()
+        projects = Project.objects.all().order_by('end_date')[:10]
         return render(request, self.template_name, {
             'projects': projects
             })
