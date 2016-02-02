@@ -102,6 +102,10 @@ class ProjectDetail(View):
         else:
             return data
 
+    def __date_range(self, start_date, end_date):
+        # Returns every date in the range
+        return (start_date + datetime.timedelta(days=i) for i in range((end_date - start_date).days + 1))
+
 @method_decorator(login_required, name='dispatch')
 class ProjectNew(View):
     form_class = ProjectForm
