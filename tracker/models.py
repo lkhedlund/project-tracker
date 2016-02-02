@@ -8,6 +8,7 @@ class Project(models.Model):
     start_date = models.DateField(default=timezone.now)
     end_date = models.DateField(default=timezone.now)
     user_id = models.ForeignKey('auth.User')
+    archived = models.BooleanField(default=False)
 
     def __str__(self):
         return self.title

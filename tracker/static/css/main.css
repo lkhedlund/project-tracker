@@ -4,6 +4,10 @@ html, body {
   padding: 0;
 }
 
+.right {
+  float: right;
+}
+
 .login-card {
   position: absolute;
   top: 50%;

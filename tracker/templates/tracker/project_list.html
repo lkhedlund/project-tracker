@@ -24,7 +24,11 @@
         </table>
       </div>
       <div class="mdl-card__actions">
-        <a class="mdl-button" href="{% url 'project_detail' pk=project.pk %}">See Details</a>
+          <a class="mdl-button" href="{% url 'project_detail' pk=project.pk %}">See Details</a>
+          <button class="mdl-button mdl-js-button mdl-button--icon mdl-button--accent right" href="{% url 'project_archive' pk=project.pk %}">
+            <i class="material-icons">archive</i>
+        </button>
+        </form>
       </div>
     </div>
   </section>

@@ -14,9 +14,9 @@ class ArchiveList(View):
     template_name ="tracker/archive_list.html"
 
     def get(self, request):
-        projects = Project.objects.all().order_by('start_date')
+        archived_projects = Project.objects.filter(archived=True).order_by('start_date')
         return render(request, self.template_name, {
-            'projects': projects,
+            'archived_projects': archived_projects,
             })
 
 @method_decorator(login_required, name='dispatch')
@@ -24,7 +24,7 @@ class ProjectList(View):
     template_name = 'tracker/project_list.html'
 
     def get(self, request):
-        projects = Project.objects.all().order_by('end_date')[:10]
+        projects = Project.objects.filter(archived=False).order_by('end_date')[:10]
         return render(request, self.template_name, {
             'projects': projects
             })
@@ -157,4 +157,10 @@ class ProjectEdit(View):
 def project_delete(request, pk):
     project = get_object_or_404(Project, pk=pk)
     project.delete()
+    return redirect('project_list')
+
+@login_required
+def project_archive(request, pk):
+    project = get_object_or_404(Project, pk=pk)
+    project.update(archived=True)
     return redirect('project_list')
