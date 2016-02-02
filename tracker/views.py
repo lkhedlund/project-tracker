@@ -42,6 +42,7 @@ class ProjectDetail(View):
         sum_value = self.__sum_value(count_sum)
         date_progress = self.__date_progress(project)
         words_per_day = self.__words_per_day(project, sum_value)
+        counts_today = self.__count_by_day(counts, datetime.date.today())
         # Variables for date_progress and words_per_day
         return render(request, self.template_name, {
             'project': project,
@@ -49,6 +50,7 @@ class ProjectDetail(View):
             'count_sum': count_sum,
             'date_progress': date_progress,
             'words_per_day': words_per_day,
+            'counts_today': counts_today,
             'form': form
             })
 
@@ -58,21 +60,13 @@ class ProjectDetail(View):
         counts = project.counts.all()
         count_sum = project.counts.aggregate(Sum('count_update'))
         sum_value = self.__sum_value(count_sum)
-        date_progress = self.__date_progress(project)
-        words_per_day = self.__words_per_day(project, sum_value)
         if form.is_valid():
             count = form.save(commit=False)
             count.project = project
-            print(count_sum)
-            count.count_update = self.__count_diff(form.cleaned_data['count_update'], count_sum['count_update__sum'])
+            count.count_update = self.__count_diff(form.cleaned_data['count_update'], sum_value)
             count.save()
             return HttpResponseRedirect(reverse('project_detail', args=(project.id,)))
         return render(request, self.template_name, {
-            'project': project,
-            'counts': counts,
-            'count_sum': count_sum,
-            'date_progress': date_progress,
-            'words_per_day': words_per_day,
             'form': form
             })
 
@@ -101,11 +95,18 @@ class ProjectDetail(View):
         # Returns the difference between the data and the sum if the new value
         # is greater. This is meant to account for someone updating their count
         # from a total count (like word count from MS Word).
-        print(data, count_sum)
         if data > -1:
             return data - count_sum
         else:
             return data
+
+    def __date_range(self, start_date, end_date):
+        # Returns every date in the range
+        return (start_date + datetime.timedelta(days=i) for i in range((end_date - start_date).days + 1))
+
+    def __count_by_day(self, counts, date):
+        # Returns the count on a given day
+        return counts.filter(created_date=date).aggregate(Sum('count_update'))
 
 @method_decorator(login_required, name='dispatch')
 class ProjectNew(View):
@@ -156,7 +157,8 @@ class ProjectEdit(View):
 @login_required
 def project_delete(request, pk):
     project = get_object_or_404(Project, pk=pk)
-    project.delete()
+    if project.user_id == request.user:
+        project.delete()
     return redirect('project_list')
 
 @login_required

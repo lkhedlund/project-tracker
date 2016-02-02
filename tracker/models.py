@@ -19,4 +19,4 @@ class Count(models.Model):
     project = models.ForeignKey('tracker.Project', related_name='counts')
 
     def __str__(self):
-        return self.count_update
+        return str(self.count_update)
