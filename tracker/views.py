@@ -59,10 +59,11 @@ class ProjectDetail(View):
         project = get_object_or_404(Project, pk=pk)
         counts = project.counts.all()
         count_sum = project.counts.aggregate(Sum('count_update'))
+        sum_value = self.__sum_value(count_sum)
         if form.is_valid():
             count = form.save(commit=False)
             count.project = project
-            count.count_update = self.__count_diff(form.cleaned_data['count_update'], count_sum['count_update__sum'])
+            count.count_update = self.__count_diff(form.cleaned_data['count_update'], sum_value)
             count.save()
             return HttpResponseRedirect(reverse('project_detail', args=(project.id,)))
         return render(request, self.template_name, {
@@ -94,7 +95,6 @@ class ProjectDetail(View):
         # Returns the difference between the data and the sum if the new value
         # is greater. This is meant to account for someone updating their count
         # from a total count (like word count from MS Word).
-        print(data, count_sum)
         if data > -1:
             return data - count_sum
         else:
