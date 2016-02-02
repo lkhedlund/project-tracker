@@ -42,6 +42,7 @@ class ProjectDetail(View):
         sum_value = self.__sum_value(count_sum)
         date_progress = self.__date_progress(project)
         words_per_day = self.__words_per_day(project, sum_value)
+        counts_today = self.__count_by_day(counts, datetime.date.today())
         # Variables for date_progress and words_per_day
         return render(request, self.template_name, {
             'project': project,
@@ -49,6 +50,7 @@ class ProjectDetail(View):
             'count_sum': count_sum,
             'date_progress': date_progress,
             'words_per_day': words_per_day,
+            'counts_today': counts_today,
             'form': form
             })
 
@@ -101,6 +103,10 @@ class ProjectDetail(View):
     def __date_range(self, start_date, end_date):
         # Returns every date in the range
         return (start_date + datetime.timedelta(days=i) for i in range((end_date - start_date).days + 1))
+
+    def __count_by_day(self, counts, date):
+        # Returns the count on a given day
+        return counts.filter(created_date=date).aggregate(Sum('count_update'))
 
 @method_decorator(login_required, name='dispatch')
 class ProjectNew(View):

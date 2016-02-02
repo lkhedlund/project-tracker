@@ -23,6 +23,9 @@
           <strong>Words per day (to reach goal on time):</strong> {{ words_per_day }}
         </p>
         <p>
+          <strong>Today's total count:</strong> {{ counts_today.count_update__sum }}
+        </p>
+        <p>
           <strong>Total count:</strong> {{ count_sum.count_update__sum }}
         </p>
         <form method="post" action="{% url 'project_detail' pk=project.pk %}">
