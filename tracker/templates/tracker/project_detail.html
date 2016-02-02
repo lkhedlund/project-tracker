@@ -16,6 +16,37 @@
       <p>
         <strong>Goal total:</strong> {{ project.total_count }}
       </p>
+      <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
+      <div id="linearCountChart" style="height: 350px; width: 800px"></div>
+      <script>
+        google.charts.load('current', {'packages':['corechart']});
+        google.charts.setOnLoadCallback(drawChart);
+
+        function drawChart() {
+          var dailyCountsArray = {{ daily_counts_array|safe }};
+          var totalDays = {{ total_days }};
+          var totalCount = {{ project.total_count }};
+          var data = google.visualization.arrayToDataTable(dailyCountsArray);
+
+          var options = {
+            colors: ['#00bcd4'],
+            hAxis: {title: "Day", minValue: 0, maxValue: totalDays},
+            vAxis: {title: "Counts", minValue: 0, maxValue: totalCount},
+            chartArea: {width:'50%'},
+            trendlines: {
+              0: {
+                type: 'linear',
+                showR2: true,
+                visibleInLegend: false,
+                color: '#e91e63'
+              }
+            }
+          };
+
+          var linearCountChart = new google.visualization.ScatterChart(document.getElementById('linearCountChart'));
+          linearCountChart.draw(data, options);
+        }
+      </script>
     </div>
       <div class="mdl-card__supporting-text">
         <h3>Project tracking</h3>
