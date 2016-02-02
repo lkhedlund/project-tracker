@@ -1,4 +1,4 @@
-#Project Tracker (In Development)
+#Project Tracker
 This lightweight web app (written in Django) allows you to set any goal that requires a count, and challenge yourself to meet that goal through charts, daily total, and eventually achievements.
 
 ##Feature List
