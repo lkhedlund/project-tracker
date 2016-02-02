@@ -57,13 +57,9 @@ class ProjectDetail(View):
         project = get_object_or_404(Project, pk=pk)
         counts = project.counts.all()
         count_sum = project.counts.aggregate(Sum('count_update'))
-        sum_value = self.__sum_value(count_sum)
-        date_progress = self.__date_progress(project)
-        words_per_day = self.__words_per_day(project, sum_value)
         if form.is_valid():
             count = form.save(commit=False)
             count.project = project
-            print(count_sum)
             count.count_update = self.__count_diff(form.cleaned_data['count_update'], count_sum['count_update__sum'])
             count.save()
             return HttpResponseRedirect(reverse('project_detail', args=(project.id,)))
