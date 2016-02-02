@@ -13,11 +13,17 @@
         </span>
       </span>
       <span class="mdl-list__item-secondary-content">
-        <a class="mdl-list__item-secondary-action" href="{% url 'project_archive' pk=project.pk %}"><i class="material-icons">unarchive</i></a>
+        <a id="ua{{ project.id }}" class="mdl-list__item-secondary-action" href="{% url 'project_archive' pk=project.pk %}"><i class="material-icons">unarchive</i></a>
       </span>
+      <div class="mdl-tooltip" for="ua{{ project.id }}">
+        Unarchive
+      </div>
       <span class="mdl-list__item-secondary-content">
-        <a class="mdl-list__item-secondary-action" href="{% url 'project_detail' pk=project.pk %}"><i class="material-icons">open_in_new</i></a>
+        <a id="on{{ project.id }}" class="mdl-list__item-secondary-action" href="{% url 'project_detail' pk=project.pk %}"><i class="material-icons">open_in_new</i></a>
       </span>
+      <div class="mdl-tooltip" for="on{{ project.id }}">
+        Go to project
+      </div>
     </li>
     {% endfor %}
   </ul>
