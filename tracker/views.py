@@ -39,10 +39,12 @@ class ProjectDetail(View):
         project = get_object_or_404(Project, pk=pk)
         counts = project.counts.all()
         count_sum = project.counts.aggregate(Sum('count_update'))
+        total_days = (project.end_date - project.start_date).days
         sum_value = self.__sum_value(count_sum)
-        date_progress = self.__date_progress(project)
+        date_progress = self.__date_progress(project, total_days)
         words_per_day = self.__words_per_day(project, sum_value)
         counts_today = self.__count_by_day(counts, datetime.date.today())
+        daily_counts_array = self.__linear_count_chart(project, counts)
         # Variables for date_progress and words_per_day
         return render(request, self.template_name, {
             'project': project,
@@ -51,6 +53,8 @@ class ProjectDetail(View):
             'date_progress': date_progress,
             'words_per_day': words_per_day,
             'counts_today': counts_today,
+            'total_days': total_days,
+            'daily_counts_array': daily_counts_array,
             'form': form
             })
 
@@ -78,9 +82,8 @@ class ProjectDetail(View):
         except ZeroDivisionError:
             return int(remaining_words)
 
-    def __date_progress(self, project):
+    def __date_progress(self, project, total_days):
         time_from_start = (datetime.date.today() - project.start_date).days
-        total_days = (project.end_date - project.start_date).days
         try:
             return (time_from_start / total_days) * 100
         except ZeroDivisionError:
@@ -107,6 +110,16 @@ class ProjectDetail(View):
     def __count_by_day(self, counts, date):
         # Returns the count on a given day
         return counts.filter(created_date=date).aggregate(Sum('count_update'))
+
+    def __linear_count_chart(self, project, counts):
+        # Returns an array with data that is useable by google charts
+        array = [['Day', 'Count']]
+        for date in self.__date_range(project.start_date, datetime.date.today()):
+            day = (date - project.start_date).days
+            count = self.__count_by_day(counts, date)
+            count = self.__sum_value(count)
+            array.append([day, count])
+        return array
 
 @method_decorator(login_required, name='dispatch')
 class ProjectNew(View):
