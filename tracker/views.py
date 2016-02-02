@@ -68,11 +68,6 @@ class ProjectDetail(View):
             count.save()
             return HttpResponseRedirect(reverse('project_detail', args=(project.id,)))
         return render(request, self.template_name, {
-            'project': project,
-            'counts': counts,
-            'count_sum': count_sum,
-            'date_progress': date_progress,
-            'words_per_day': words_per_day,
             'form': form
             })
 
@@ -156,7 +151,8 @@ class ProjectEdit(View):
 @login_required
 def project_delete(request, pk):
     project = get_object_or_404(Project, pk=pk)
-    project.delete()
+    if project.user_id == request.user:
+        project.delete()
     return redirect('project_list')
 
 @login_required
