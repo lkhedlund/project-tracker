@@ -13,6 +13,9 @@
         </span>
       </span>
       <span class="mdl-list__item-secondary-content">
+        <a class="mdl-list__item-secondary-action" href="{% url 'project_archive' pk=project.pk %}"><i class="material-icons">unarchive</i></a>
+      </span>
+      <span class="mdl-list__item-secondary-content">
         <a class="mdl-list__item-secondary-action" href="{% url 'project_detail' pk=project.pk %}"><i class="material-icons">open_in_new</i></a>
       </span>
     </li>

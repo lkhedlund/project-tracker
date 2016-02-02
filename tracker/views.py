@@ -162,5 +162,9 @@ def project_delete(request, pk):
 @login_required
 def project_archive(request, pk):
     project = get_object_or_404(Project, pk=pk)
-    project.update(archived=True)
+    if project.archived:
+        project.archived = False
+    else:
+        project.archived = True
+    project.save()
     return redirect('project_list')
